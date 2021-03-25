@@ -12,11 +12,10 @@ class bert_douban(nn.Module):
         self.bert = BertModel.from_pretrained(bert_dir_path)
         for param in self.bert.parameters():
             param.requires_grad = require_grad
-        layers = [nn.Linear(768, hidden_size), nn.Dropout(dropout), nn.ReLU()]
+        layers = [nn.Dropout(dropout), nn.Linear(768, hidden_size), nn.Dropout(dropout), nn.ReLU()]
         for i in range(num_layer-2):
             layers += [nn.Linear(hidden_size, hidden_size), nn.Dropout(dropout), nn.ReLU()]
         layers.append(nn.Linear(hidden_size, label_num))
-        # layers.append(nn.Sigmoid())
         self.fc = nn.Sequential(*layers)
 
 

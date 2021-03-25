@@ -11,6 +11,7 @@ from model import bert_douban
 import numpy as np
 from datetime import datetime
 import random
+from metric import metric_accuracy
 
 
 def parse_bool(v):
@@ -41,6 +42,7 @@ setup_seed(6)
 batch = args.batch if not DEBUG_MODE else 10
 lr = args.lr
 is_load_model = args.load_model
+warm_up_epoch = 2
 if args.cuda == 'cpu':
     device = torch.device('cpu')
 else:
@@ -78,10 +80,11 @@ optimizer = optim.AdamW(
     # optimizer = optim.Adam(model.net.parameters(), lr=lr, )
 scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='min', factor=0.85, patience=3,
                                                      verbose=True, min_lr=3e-8)
-warmup_scheduler = optim.lr_scheduler.LambdaLR(optimizer, lr_lambda=lambda ep: 1e-2 if ep < 4 else 1.0)
+warmup_scheduler = optim.lr_scheduler.LambdaLR(optimizer, lr_lambda=lambda ep: 1e-2 if ep < warm_up_epoch else 1.0)
 
 criterion = nn.BCEWithLogitsLoss()
 
+metric_acc = metric_accuracy(3)
 
 def k_fold_split(dataset:douban_dataset, split_ratio:float):
     all = len(dataset)
@@ -177,7 +180,7 @@ def main():
         eval_loss /= fold_num
         acc /= fold_num
 
-        if ep < 4:
+        if ep < warm_up_epoch:
             warmup_scheduler.step(ep)
         else:
             scheduler.step(eval_loss)
@@ -191,7 +194,7 @@ def main():
 
 
         print(f'epoch {ep} done! train_loss {train_loss:.5f}  '
-                f'eval_loss {eval_loss:.5f} best acc {best_acc:.5f} best loss {best_loss:.5f}')
+                f'eval_loss {eval_loss:.5f} eval_acc {acc:.5f} best acc {best_acc:.5f}')
     if best_state:
         torch.save(best_state, best_path)
         print(f'saving model to {best_path}')

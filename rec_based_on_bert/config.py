@@ -10,7 +10,7 @@ class douban_dataset_config:
 
 class model_config:
     bert_type = 'bert-base-chinese'
-    fc_hidden_size = 384
+    fc_hidden_size = 500
     fc_num_layer = 3
     fc_dropout_rate = 0.5
     model_load_path = None
