@@ -129,22 +129,18 @@ def train(train_dataset):
 def evaluate(validation_dataset):
     model.eval()
     loss_mean = 0.0
-    correct = 0
-    num = 0
+    metric_acc.reset()
     with tqdm(total=len(validation_dataset), desc='test') as pbar:
         for (x1, x2, x3), y in validation_dataset:
             x1, x2, x3, y = x1.to(device), x2.to(device), x3.to(device), y.to(device)
             logits = model((x1, x2, x3))
             loss = criterion(logits, y).item()
-            logits = torch.sigmoid(logits)
-            logits[logits >= 0.5] = 1
-            num += y.shape[0]
-            correct += logits.eq(y).sum().item()
+            metric_acc(logits, y)
             loss_mean += loss
-            pbar.set_postfix_str(f'loss {loss:.4f} acc{correct/num/label_num:.4f}')
+            pbar.set_postfix_str(f'loss {loss:.4f} acc {metric_acc.value():.4f}')
             pbar.update(1)
 
-    return loss_mean / len(validation_dataset), correct / num / label_num
+    return loss_mean / len(validation_dataset), metric_acc.value()
 
 
 def main():
