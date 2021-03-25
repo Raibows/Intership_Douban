@@ -61,4 +61,4 @@ if __name__ == '__main__':
 
     logger = logging.getLogger('datashow')
     douban_db = douban_db.douban_db('./database.json', logger)
-    douban_db.execute()
+    # douban_db.execute()
