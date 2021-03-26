@@ -14,5 +14,5 @@ class model_config:
     fc_hidden_size = 768
     fc_num_layer = 3
     fc_dropout_rate = 0.5
-    model_load_path = None
+    model_load_path = './static/03_26_11_16_51_0.35445_0.82143_bert_douban.pt'
     bert_fine_tune = True
