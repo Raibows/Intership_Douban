@@ -5,13 +5,13 @@ import torch
 from torch import nn, optim
 from torch.utils.data import DataLoader, random_split
 from tqdm import tqdm
-from data import douban_dataset
-from config import model_config, douban_dataset_config, DEBUG_MODE
-from model import bert_douban
+from .data import douban_dataset
+from .config import model_config, douban_dataset_config, DEBUG_MODE
+from .model import bert_douban
 import numpy as np
 from datetime import datetime
 import random
-from metric import metric_accuracy
+from .metric import metric_accuracy
 
 
 def parse_bool(v):

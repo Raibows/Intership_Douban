@@ -1,7 +1,7 @@
 import torch
 from transformers import BertModel
 from torch import nn
-from config import model_config
+from .config import model_config
 
 
 

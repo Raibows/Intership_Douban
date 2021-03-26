@@ -1,7 +1,7 @@
 from torch.utils.data import Dataset
 from tqdm import tqdm
-from transformers import BertTokenizer
-from config import douban_dataset_config, model_config, DEBUG_MODE
+from .transformers import BertTokenizer
+from .config import douban_dataset_config, model_config, DEBUG_MODE
 import torch
 import torch.nn.functional as F
 import random
