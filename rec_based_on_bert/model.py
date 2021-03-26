@@ -13,9 +13,14 @@ class bert_douban(nn.Module):
         for param in self.bert.parameters():
             param.requires_grad = require_grad
         layers = [nn.Dropout(dropout), nn.Linear(768, hidden_size), nn.Dropout(dropout), nn.ReLU()]
+        div = 1
         for i in range(num_layer-2):
-            layers += [nn.Linear(hidden_size, hidden_size), nn.Dropout(dropout), nn.ReLU()]
-        layers.append(nn.Linear(hidden_size, label_num))
+            input = int(hidden_size / div)
+            output = int(hidden_size / div / 2)
+            layers += [nn.Linear(input, output), nn.Dropout(dropout), nn.ReLU()]
+            div *= 2
+        input = int(hidden_size / div)
+        layers.append(nn.Linear(input, label_num))
         self.fc = nn.Sequential(*layers)
 
 

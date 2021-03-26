@@ -52,7 +52,7 @@ else:
 
 
 train_dataset = douban_dataset(douban_dataset_config.train_path)
-test_dataset = douban_dataset(douban_dataset_config.test_path)
+test_dataset = douban_dataset(douban_dataset_config.test_path, label_keeps=train_dataset.label_uniq)
 label_num = train_dataset.label_num
 
 
@@ -85,6 +85,8 @@ warmup_scheduler = optim.lr_scheduler.LambdaLR(optimizer, lr_lambda=lambda ep: 1
 criterion = nn.BCEWithLogitsLoss()
 
 metric_acc = metric_accuracy(3)
+
+metric_records = [('epoch', 'train_loss', 'valid_loss', 'test_loss', 'valid_acc', 'test_acc')]
 
 def k_fold_split(dataset:douban_dataset, split_ratio:float):
     all = len(dataset)
@@ -126,11 +128,11 @@ def train(train_dataset):
     return loss_mean / len(train_dataset)
 
 @torch.no_grad()
-def evaluate(validation_dataset):
+def evaluate(validation_dataset, title='validation'):
     model.eval()
     loss_mean = 0.0
     metric_acc.reset()
-    with tqdm(total=len(validation_dataset), desc='test') as pbar:
+    with tqdm(total=len(validation_dataset), desc=title) as pbar:
         for (x1, x2, x3), y in validation_dataset:
             x1, x2, x3, y = x1.to(device), x2.to(device), x3.to(device), y.to(device)
             logits = model((x1, x2, x3))
@@ -165,12 +167,12 @@ def main():
         acc = 0.0
         random.shuffle(folds_range)
         for kf in folds_range:
-            print(f'epoch {ep} fold {kf} training')
             train_loss += train(dataset_kfolds[kf][0])
-            print(f'epoch {ep} fold {kf} evaluating')
             t1, t2 = evaluate(dataset_kfolds[kf][1])
             eval_loss += t1
             acc += t2
+
+        test_loss, test_acc = evaluate(test_dataset, title='test_dataset')
 
         train_loss /= fold_num
         eval_loss /= fold_num
@@ -181,23 +183,27 @@ def main():
         else:
             scheduler.step(eval_loss)
 
-        if acc > best_acc:
-            best_loss = eval_loss
-            best_acc = acc
+        if test_acc > best_acc:
+            best_loss = test_loss
+            best_acc = test_acc
             best_path = base_path.format(datetime.now().strftime("%m_%d_%H_%M_%S"), best_loss, best_acc)
             best_state = copy.deepcopy(model.state_dict())
 
+        metric_records.append((ep, train_loss, eval_loss, test_loss, acc, test_acc))
+        print(f'epoch {ep} done! train_loss {train_loss:.5f} best acc {best_acc:.5f} \n'
+                f'eval_loss {eval_loss:.5f} eval_acc {acc:.5f} \n'
+              f'test_loss {test_loss:.5f} test_acc {test_acc:.5f}')
 
-
-        print(f'epoch {ep} done! train_loss {train_loss:.5f}  '
-                f'eval_loss {eval_loss:.5f} eval_acc {acc:.5f} best acc {best_acc:.5f}')
     if best_state:
         torch.save(best_state, best_path)
         print(f'saving model to {best_path}')
 
-    print(f'the best model have been saved in {best_path}')
 
+    with open(f'{best_path}.rec', 'w') as file:
+        for line in metric_records:
+            file.write(f"{line}\n")
 
+    print(f'the best model have been saved in {best_path} train records saved in {best_path}.rec')
 
 
 
@@ -205,5 +211,5 @@ if __name__ == '__main__':
     if not args.only_evaluate:
         main()
     print('now starting evaluate test dataset')
-    test_loss, test_acc = evaluate(test_dataset)
+    test_loss, test_acc = evaluate(test_dataset, title='on test_dataset')
     print(f'test done! test_loss {test_loss} test_acc {test_acc}')
