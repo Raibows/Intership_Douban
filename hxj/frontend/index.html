@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Movie recommend</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/index.css">
+
+</head>
+
+<body class="is-boxed has-animations">
+    <div class="body-wrap boxed-container">
+        <header class="site-header">
+            <div class="container">
+                <div class="site-header-inner">
+                    <ul class="header-links list-reset m-0">
+                        <li>
+                            <a href="#">Login</a>
+                        </li>
+                        <li>
+                            <a class="button button-sm button-shadow" href="#">Signup</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </header>
+
+        <main>
+            <section class="hero text-light text-center">
+                <!-- 搜索 -->
+                <div class="hero-inner">
+                    <h1 class="hero-title h2-mobile mt-0 is-revealing">Movie Recommend</h1>
+                    <p class="hero-paragraph is-revealing">This is a movie recommend demo.</p>
+                    <p class="hero-cta is-revealing">
+                        <input type="text" id="movieName" placeholder="忠犬八公的故事">
+                        <a class="button button-secondary button-shadow" href="#" id="search">Search</a>
+                    </p>
+                </div>
+                <!-- 轮播 -->
+                <div class="slider container-sm">
+                    <ul class="slides">
+                        <li class="" style="width: 100%; float: left; margin-right: -100%; position: relative; opacity: 0; display: block; z-index: 1;">
+                            <a href="#"><img src="images/slide-1.jpg" alt="Slide 1" draggable="false"></a>
+                        </li>
+                        <li style="width: 100%; float: left; margin-right: -100%; position: relative; opacity: 1; display: block; z-index: 2;" class="flex-active-slide">
+                            <a href="#"><img src="images/slide-2.jpg" alt="Slide 2" draggable="false"></a>
+                        </li>
+                        <li style="width: 100%; float: left; margin-right: -100%; position: relative; opacity: 0; display: block; z-index: 1;" class="">
+                            <a href="#"><img src="images/slide-3.jpg" alt="Slide 3" draggable="false"></a>
+                        </li>
+                    </ul>
+                    <ul class="flex-direction-nav">
+                        <li><a class="flex-prev" href="#">&lt;</a></li>
+                        <li><a class="flex-next" href="#">&gt;</a></li>
+                    </ul>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="js/scrollreveal.min.js"></script>
+    <script src="js/main.min.js"></script>
+    <script src="js/jquery-3.3.1.js"></script>
+    <!-- 轮播图 -->
+    <script src="js/slider.js"></script>
+    <script>
+        // 轮播
+        $(".slider").flexslider({
+            controlNav: false,
+            prevText: "&lt;",
+            nextText: "&gt;",
+        });
+
+        $('#search').click(function() {
+            var movieName = $('#movieName').val()
+            if (movieName == '') {
+                alert("查询内容不能为空！")
+                return;
+            } else {
+                window.location.href = "result.html?name=" + movieName
+            }
+        })
+    </script>
+
+</body>
+
+</html>

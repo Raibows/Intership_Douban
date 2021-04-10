@@ -1,0 +1,168 @@
+/* 顶部靠右显示 */
+
+.site-header-inner {
+    float: right;
+}
+
+
+/* 调整间距 */
+
+@media (min-width: 641px) {
+    .hero {
+        padding-top: 30px;
+    }
+    .hero p {
+        margin-bottom: 30px;
+    }
+    /* 调整result.html的左右布局位置 */
+    .feature-extended:nth-child(even) .feature-extended-image {
+        order: 0;
+    }
+    .feature-extended:nth-child(odd) .feature-extended-image {
+        order: 1;
+    }
+}
+
+
+/* 搜索框 */
+
+#movieName {
+    display: inline-flex;
+    width: 210px;
+    font-size: 14px;
+    line-height: 16px;
+    color: #00A2B8 !important;
+    border: none;
+    outline: none;
+    border-radius: 2px;
+    padding: 16px;
+    white-space: nowrap;
+}
+
+
+/* 轮播图 */
+
+.slider {
+    position: relative;
+    margin-bottom: 30px;
+}
+
+.slider .slides {
+    list-style: none;
+    *zoom: 1;
+}
+
+.slider .slides:after {
+    content: " ";
+    clear: both;
+    display: block;
+    overflow: hidden;
+    height: 0;
+}
+
+.slider li {
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.slider img {
+    max-width: 100%;
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.slider .flex-direction-nav {
+    list-style: none;
+    z-index: 2;
+    position: absolute;
+    top: 45%;
+    width: 100%;
+}
+
+.slider .flex-direction-nav a {
+    width: 45px;
+    height: 45px;
+    line-height: 45px;
+    text-decoration: none;
+    border-radius: 50%;
+    color: #00A2B8;
+    background: white;
+    text-align: center;
+    font-size: 18px;
+    font-size: 1.2em;
+    display: block;
+    position: absolute;
+    -webkit-transition: .3s ease;
+    transition: .3s ease;
+}
+
+.slider .flex-direction-nav a:hover {
+    background-color: #00A2B8;
+    color: white;
+}
+
+.slider .flex-direction-nav .flex-prev {
+    left: 30px;
+}
+
+.slider .flex-direction-nav .flex-next {
+    right: 52px;
+}
+
+
+/* result.html样式 */
+
+
+/* 图片大小自适应 */
+
+@media (min-width: 1025px) {
+    .feature-extended-image img,
+    .feature-extended-image svg {
+        width: 350px;
+    }
+}
+
+.info {
+    font-size: 16px;
+    color: #202B36;
+}
+
+.info p {
+    margin-bottom: 2px;
+}
+
+#brief {
+    margin-top: 15px;
+    font-size: 16px;
+    line-height: 22px;
+    color: #202B36;
+}
+
+#graph {
+    height: 600px;
+    width: 90%;
+    margin: 0 auto;
+}
+
+.targets {
+    padding-bottom: 20px;
+}
+
+.targets p {
+    margin-bottom: 10px;
+}
+
+.badge {
+    height: 18px;
+    line-height: 18px;
+    position: relative;
+    display: inline-block;
+    padding: 0 6px;
+    font-size: 12px;
+    text-align: center;
+    background-color: #FF5722;
+    color: #fff;
+    border-radius: 2px;
+    margin-right: 5px;
+}
